@@ -1,10 +1,8 @@
 import 'package:todosqflite/models/todo_model.dart';
-import 'package:todosqflite/screens/todo_input_screen/todo_input_screen_view.dart';
+import 'package:todosqflite/shared/shared_dialog.dart';
 import 'package:todosqflite/widgets/custom_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-// import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TodoPendingScreenView extends StatefulWidget {
   const TodoPendingScreenView({Key? key}) : super(key: key);
@@ -14,13 +12,86 @@ class TodoPendingScreenView extends StatefulWidget {
 }
 
 class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
+  showSharedDialogCreate() {
+    ScrollController scrollController = ScrollController();
+
+    showSharedDialog(
+      context: context,
+      barrierDismissible: true,
+      title: const Text("Todo Details"),
+      content: Card(
+        elevation: 0,
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 2.5.h),
+            const TextField(
+              autocorrect: false,
+              enableSuggestions: false,
+              keyboardType: TextInputType.visiblePassword,
+              decoration: InputDecoration(
+                label: Text("Title"),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black45),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black45),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Scrollbar(
+              controller: scrollController,
+              isAlwaysShown: true,
+              child: TextField(
+                autocorrect: false,
+                enableSuggestions: false,
+                keyboardType: TextInputType.multiline,
+                minLines: 8,
+                maxLines: 8,
+                scrollController: scrollController,
+                decoration: const InputDecoration(
+                  alignLabelWithHint: true,
+                  label: Text("Content"),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black45),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black45),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actionFunction1: () {
+        Navigator.pop(context);
+      },
+      actionLabel1: const Text("Cancel"),
+      actionFunction2: () {
+        Navigator.pop(context);
+      },
+      actionLabel2: const Text("Create"),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TodoPendingCard(
                 todo: Todo(
@@ -54,33 +125,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // showDialog(
-          //   context: context,
-          //   barrierDismissible: false,
-          //   barrierColor: Colors.transparent,
-          //   builder: (BuildContext context) {
-          //     return WillPopScope(
-          //       onWillPop: () async {
-          //         return false;
-          //       },
-          //       child: const SpinKitCircle(
-          //         color: Colors.purple,
-          //         size: 50.0,
-          //       ),
-          //     );
-          //   },
-          // );
-
-          // await Future.delayed(const Duration(seconds: 2), () {
-          //   Navigator.pop(context);
-          // });
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TodoInputScreenView(),
-            ),
-          );
+          showSharedDialogCreate();
         },
         child: const Icon(Icons.add),
       ),

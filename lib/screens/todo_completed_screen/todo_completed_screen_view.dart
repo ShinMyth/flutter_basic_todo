@@ -16,9 +16,12 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TodoCompletedCard(
                 todo: Todo(
