@@ -1,4 +1,5 @@
 import 'package:todosqflite/models/todo_model.dart';
+import 'package:todosqflite/services/sqflite_database_service.dart';
 import 'package:todosqflite/widgets/custom_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -12,34 +13,56 @@ class TodoCompletedScreenView extends StatefulWidget {
 }
 
 class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
+  List<Todo> listTodoCompleted = <Todo>[];
+
+  @override
+  void initState() {
+    getTodoCompleted();
+    super.initState();
+  }
+
+  getTodoCompleted() async {
+    List result =
+        await SqfliteDatabaseService().selectTodo(status: "Completed");
+    setState(
+      () {
+        for (var value in result) {
+          listTodoCompleted.add(
+            Todo(
+              id: value["id"],
+              title: value["title"],
+              content: value["content"],
+              status: value["status"],
+            ),
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TodoCompletedCard(
-                todo: Todo(
-                  title: "Todo #4",
-                  content:
-                      "qweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\nqweqe\n",
+      body: listTodoCompleted.isEmpty
+          ? const Center(
+              child: Text("No completed todo"),
+            )
+          : SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: listTodoCompleted.length,
+                  itemBuilder: (context, index) {
+                    return TodoPendingCard(
+                      todo: listTodoCompleted[index],
+                    );
+                  },
                 ),
               ),
-              TodoCompletedCard(
-                todo: Todo(
-                  title: "Todo #5",
-                  content: "qweqe\nqweqe\nqweqe\nqweqe\nqweqe\n",
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

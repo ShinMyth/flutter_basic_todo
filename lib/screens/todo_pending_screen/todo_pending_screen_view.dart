@@ -1,4 +1,5 @@
 import 'package:todosqflite/models/todo_model.dart';
+import 'package:todosqflite/services/sqflite_database_service.dart';
 import 'package:todosqflite/shared/shared_dialog.dart';
 import 'package:todosqflite/widgets/custom_cards.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,36 @@ class TodoPendingScreenView extends StatefulWidget {
 }
 
 class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
-  showSharedDialogCreate() {
+  List<Todo> listTodoPending = <Todo>[];
+
+  @override
+  void initState() {
+    getTodoPending();
+    super.initState();
+  }
+
+  getTodoPending() async {
+    List result = await SqfliteDatabaseService().selectTodo(status: "Pending");
+    setState(
+      () {
+        for (var value in result) {
+          listTodoPending.add(
+            Todo(
+              id: value["id"],
+              title: value["title"],
+              content: value["content"],
+              status: value["status"],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  showSharedDialogInsert() {
     ScrollController scrollController = ScrollController();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController contentController = TextEditingController();
 
     showSharedDialog(
       context: context,
@@ -27,11 +56,12 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 2.5.h),
-            const TextField(
+            TextField(
+              controller: titleController,
               autocorrect: false,
               enableSuggestions: false,
               keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 label: Text("Title"),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black45),
@@ -48,6 +78,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
               controller: scrollController,
               isAlwaysShown: true,
               child: TextField(
+                controller: contentController,
                 autocorrect: false,
                 enableSuggestions: false,
                 keyboardType: TextInputType.multiline,
@@ -75,7 +106,15 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
         Navigator.pop(context);
       },
       actionLabel1: const Text("Cancel"),
-      actionFunction2: () {
+      actionFunction2: () async {
+        await SqfliteDatabaseService().insertTodo(
+          title: titleController.text,
+          content: contentController.text,
+          status: "Pending",
+        );
+
+        getTodoPending();
+
         Navigator.pop(context);
       },
       actionLabel2: const Text("Create"),
@@ -85,47 +124,29 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TodoPendingCard(
-                todo: Todo(
-                  title: "Todo #1",
-                  content: "asdas\nasdas",
+      body: listTodoPending.isEmpty
+          ? const Center(
+              child: Text("No pending todo"),
+            )
+          : SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: listTodoPending.length,
+                  itemBuilder: (context, index) {
+                    return TodoPendingCard(
+                      todo: listTodoPending[index],
+                    );
+                  },
                 ),
               ),
-              TodoPendingCard(
-                todo: Todo(
-                  title: "Todo #2",
-                  content: "asdas\nasdas\nasdas",
-                ),
-              ),
-              TodoPendingCard(
-                todo: Todo(
-                  title: "Todo #3",
-                  content:
-                      "asdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\n",
-                ),
-              ),
-              TodoPendingCard(
-                todo: Todo(
-                  title: "Todo #5",
-                  content:
-                      "asdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\nasdas\n",
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          showSharedDialogCreate();
+          showSharedDialogInsert();
         },
         child: const Icon(Icons.add),
       ),
