@@ -22,6 +22,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
   }
 
   getTodoPending() async {
+    // Get all todo with status of pending
     List result = await SqfliteDatabaseService().selectTodo(status: "Pending");
 
     listTodoPending.clear();
@@ -49,14 +50,12 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
 
     showSharedDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       title: const Text("Todo Details"),
       content: Card(
-        elevation: 0,
         color: Colors.transparent,
+        elevation: 0,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 2.5.h),
             TextField(
@@ -65,13 +64,15 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
               enableSuggestions: false,
               keyboardType: TextInputType.visiblePassword,
               decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 label: Text("Title"),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black45),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black45),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
               ),
@@ -89,14 +90,16 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
                 maxLines: 8,
                 scrollController: scrollController,
                 decoration: const InputDecoration(
-                  alignLabelWithHint: true,
+                  filled: true,
+                  fillColor: Colors.white,
                   label: Text("Content"),
+                  alignLabelWithHint: true,
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                 ),
@@ -110,15 +113,20 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
       },
       actionLabel1: const Text("Cancel"),
       actionFunction2: () async {
-        await SqfliteDatabaseService().insertTodo(
-          title: titleController.text,
-          content: contentController.text,
-          status: "Pending",
-        );
+        FocusManager.instance.primaryFocus!.unfocus();
 
-        getTodoPending();
+        if (titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty) {
+          await SqfliteDatabaseService().insertTodo(
+            title: titleController.text,
+            content: contentController.text,
+            status: "Pending",
+          );
 
-        Navigator.pop(context);
+          getTodoPending();
+
+          Navigator.pop(context);
+        }
       },
       actionLabel2: const Text("Create"),
     );
@@ -129,7 +137,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
     return Scaffold(
       body: listTodoPending.isEmpty
           ? const Center(
-              child: Text("No pending todo"),
+              child: Text("TODO(PENDING) IS EMPTY"),
             )
           : SingleChildScrollView(
               physics: const ClampingScrollPhysics(),

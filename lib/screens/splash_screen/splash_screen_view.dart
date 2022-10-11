@@ -17,6 +17,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
     Future.delayed(
       const Duration(milliseconds: 2500),
       () async {
+        // Setup the sqflite database
         await SqfliteDatabaseService().setupDatabase();
 
         Navigator.pushReplacement(

@@ -39,14 +39,12 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
 
     showSharedDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       title: const Text("Todo Details"),
       content: Card(
-        elevation: 0,
         color: Colors.transparent,
+        elevation: 0,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 2.5.h),
             TextField(
@@ -55,13 +53,15 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
               enableSuggestions: false,
               keyboardType: TextInputType.visiblePassword,
               decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 label: Text("Title"),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black45),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black45),
+                  borderSide: BorderSide(color: Colors.black12),
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
               ),
@@ -79,14 +79,16 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
                 maxLines: 8,
                 scrollController: scrollController,
                 decoration: const InputDecoration(
-                  alignLabelWithHint: true,
+                  filled: true,
+                  fillColor: Colors.white,
                   label: Text("Content"),
+                  alignLabelWithHint: true,
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black45),
+                    borderSide: BorderSide(color: Colors.black12),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                 ),
@@ -100,16 +102,21 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
       },
       actionLabel1: const Text("Cancel"),
       actionFunction2: () async {
-        await SqfliteDatabaseService().updateTodo(
-          id: widget.todo.id,
-          title: titleController.text,
-          content: contentController.text,
-          status: widget.todo.status,
-        );
+        FocusManager.instance.primaryFocus!.unfocus();
 
-        widget.getTodoPending();
+        if (titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty) {
+          await SqfliteDatabaseService().updateTodo(
+            id: widget.todo.id,
+            title: titleController.text,
+            content: contentController.text,
+            status: widget.todo.status,
+          );
 
-        Navigator.pop(context);
+          widget.getTodoPending();
+
+          Navigator.pop(context);
+        }
       },
       actionLabel2: const Text("Update"),
     );
