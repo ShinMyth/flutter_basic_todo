@@ -24,6 +24,9 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
   getTodoCompleted() async {
     List result =
         await SqfliteDatabaseService().selectTodo(status: "Completed");
+
+    listTodoCompleted.clear();
+
     setState(
       () {
         for (var value in result) {
@@ -56,8 +59,9 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
                   shrinkWrap: true,
                   itemCount: listTodoCompleted.length,
                   itemBuilder: (context, index) {
-                    return TodoPendingCard(
+                    return TodoCompletedCard(
                       todo: listTodoCompleted[index],
+                      getTodoCompleted: () => getTodoCompleted(),
                     );
                   },
                 ),

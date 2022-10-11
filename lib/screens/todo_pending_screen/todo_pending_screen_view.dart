@@ -23,6 +23,9 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
 
   getTodoPending() async {
     List result = await SqfliteDatabaseService().selectTodo(status: "Pending");
+
+    listTodoPending.clear();
+
     setState(
       () {
         for (var value in result) {
@@ -139,6 +142,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
                   itemBuilder: (context, index) {
                     return TodoPendingCard(
                       todo: listTodoPending[index],
+                      getTodoPending: () => getTodoPending(),
                     );
                   },
                 ),

@@ -1,4 +1,5 @@
 import 'package:todosqflite/models/todo_model.dart';
+import 'package:todosqflite/services/sqflite_database_service.dart';
 import 'package:todosqflite/shared/shared_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -9,9 +10,11 @@ class TodoPendingCard extends StatefulWidget {
   const TodoPendingCard({
     Key? key,
     required this.todo,
+    required this.getTodoPending,
   }) : super(key: key);
 
   final Todo todo;
+  final Function() getTodoPending;
 
   @override
   State<TodoPendingCard> createState() => _TodoPendingCardState();
@@ -29,6 +32,10 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
 
   showSharedDialogUpdate() {
     ScrollController scrollController = ScrollController();
+    TextEditingController titleController = TextEditingController()
+      ..text = widget.todo.title;
+    TextEditingController contentController = TextEditingController()
+      ..text = widget.todo.content;
 
     showSharedDialog(
       context: context,
@@ -42,11 +49,12 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 2.5.h),
-            const TextField(
+            TextField(
+              controller: titleController,
               autocorrect: false,
               enableSuggestions: false,
               keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 label: Text("Title"),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black45),
@@ -63,6 +71,7 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
               controller: scrollController,
               isAlwaysShown: true,
               child: TextField(
+                controller: contentController,
                 autocorrect: false,
                 enableSuggestions: false,
                 keyboardType: TextInputType.multiline,
@@ -90,7 +99,16 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
         Navigator.pop(context);
       },
       actionLabel1: const Text("Cancel"),
-      actionFunction2: () {
+      actionFunction2: () async {
+        await SqfliteDatabaseService().updateTodo(
+          id: widget.todo.id,
+          title: titleController.text,
+          content: contentController.text,
+          status: widget.todo.status,
+        );
+
+        widget.getTodoPending();
+
         Navigator.pop(context);
       },
       actionLabel2: const Text("Update"),
@@ -107,11 +125,20 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
           motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: null,
+              onPressed: (context) async {
+                await SqfliteDatabaseService().updateTodo(
+                  id: widget.todo.id,
+                  title: widget.todo.title,
+                  content: widget.todo.content,
+                  status: "Completed",
+                );
+
+                widget.getTodoPending();
+              },
               backgroundColor: Colors.green.withOpacity(0.9),
               foregroundColor: Colors.white,
               icon: Icons.check,
-              label: 'Completed',
+              label: "Completed",
             ),
           ],
         ),
@@ -170,14 +197,20 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
               icon: Icons.edit,
-              label: 'Update',
+              label: "Update",
             ),
-            const SlidableAction(
-              onPressed: null,
+            SlidableAction(
+              onPressed: (context) async {
+                await SqfliteDatabaseService().deleteTodo(
+                  id: widget.todo.id,
+                );
+
+                widget.getTodoPending();
+              },
               backgroundColor: Colors.redAccent,
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              label: 'Delete',
+              label: "Delete",
             ),
           ],
         ),
@@ -191,9 +224,11 @@ class TodoCompletedCard extends StatefulWidget {
   const TodoCompletedCard({
     Key? key,
     required this.todo,
+    required this.getTodoCompleted,
   }) : super(key: key);
 
   final Todo todo;
+  final Function() getTodoCompleted;
 
   @override
   State<TodoCompletedCard> createState() => _TodoCompletedCardState();
@@ -219,11 +254,20 @@ class _TodoCompletedCardState extends State<TodoCompletedCard> {
           motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: null,
+              onPressed: (context) async {
+                await SqfliteDatabaseService().updateTodo(
+                  id: widget.todo.id,
+                  title: widget.todo.title,
+                  content: widget.todo.content,
+                  status: "Pending",
+                );
+
+                widget.getTodoCompleted();
+              },
               backgroundColor: Colors.orange.withOpacity(0.9),
               foregroundColor: Colors.white,
               icon: Icons.close,
-              label: 'Pending',
+              label: "Pending",
             ),
           ],
         ),
@@ -272,15 +316,21 @@ class _TodoCompletedCardState extends State<TodoCompletedCard> {
             ],
           ),
         ),
-        endActionPane: const ActionPane(
-          motion: ScrollMotion(),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: null,
+              onPressed: (context) async {
+                await SqfliteDatabaseService().deleteTodo(
+                  id: widget.todo.id,
+                );
+
+                widget.getTodoCompleted();
+              },
               backgroundColor: Colors.redAccent,
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              label: 'Delete',
+              label: "Delete",
             ),
           ],
         ),
