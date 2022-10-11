@@ -35,6 +35,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  # Implement a responsive layout
+  responsive_sizer: ^3.1.1
+
+  # Slidable list item with directional slide actions
+  flutter_slidable: ^1.3.2
+
+  # A SQL offline database 
+  sqflite: ^2.0.2
+
+  # The path package provides common operations for manipulating paths
+  path: ^1.8.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +68,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
