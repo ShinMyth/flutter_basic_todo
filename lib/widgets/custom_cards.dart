@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-// Used in todo pending screen
+// Used in todo_pending_screen
 class TodoPendingCard extends StatefulWidget {
   const TodoPendingCard({
     Key? key,
@@ -45,6 +45,7 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
         color: Colors.transparent,
         elevation: 0,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 2.5.h),
             TextField(
@@ -170,22 +171,21 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
               ),
               if (isExpanded == true) ...[
                 const Divider(),
-                Container(
-                  height: 18.5.h,
-                  width: 85.w,
-                  padding: EdgeInsets.symmetric(vertical: 1.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.5.w),
                   child: Scrollbar(
                     controller: scrollController,
                     isAlwaysShown: true,
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      scrollDirection: Axis.vertical,
-                      physics: const ClampingScrollPhysics(),
-                      child: Text(
-                        widget.todo.content,
-                        style: TextStyle(
-                          fontSize: 15.5.sp,
-                        ),
+                    child: TextField(
+                      controller: TextEditingController()
+                        ..text = widget.todo.content,
+                      minLines: 8,
+                      maxLines: 8,
+                      scrollController: scrollController,
+                      readOnly: true,
+                      enableInteractiveSelection: false,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
@@ -226,7 +226,7 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
   }
 }
 
-// Used in todo completed screen
+// Used in todo_completed_screen
 class TodoCompletedCard extends StatefulWidget {
   const TodoCompletedCard({
     Key? key,
@@ -299,22 +299,21 @@ class _TodoCompletedCardState extends State<TodoCompletedCard> {
               ),
               if (isExpanded == true) ...[
                 const Divider(),
-                Container(
-                  height: 18.5.h,
-                  width: 85.w,
-                  padding: EdgeInsets.symmetric(vertical: 1.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.5.w),
                   child: Scrollbar(
                     controller: scrollController,
                     isAlwaysShown: true,
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      scrollDirection: Axis.vertical,
-                      physics: const ClampingScrollPhysics(),
-                      child: Text(
-                        widget.todo.content,
-                        style: TextStyle(
-                          fontSize: 15.5.sp,
-                        ),
+                    child: TextField(
+                      controller: TextEditingController()
+                        ..text = widget.todo.content,
+                      minLines: 8,
+                      maxLines: 8,
+                      scrollController: scrollController,
+                      readOnly: true,
+                      enableInteractiveSelection: false,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
                       ),
                     ),
                   ),

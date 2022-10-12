@@ -21,8 +21,8 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
     super.initState();
   }
 
+  // Get all todo with status of pending
   getTodoPending() async {
-    // Get all todo with status of pending
     List result = await SqfliteDatabaseService().selectTodo(status: "Pending");
 
     listTodoPending.clear();
@@ -56,6 +56,7 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
         color: Colors.transparent,
         elevation: 0,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 2.5.h),
             TextField(
@@ -136,8 +137,27 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: listTodoPending.isEmpty
-          ? const Center(
-              child: Text("TODO(PENDING) IS EMPTY"),
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.report,
+                    size: 26.sp,
+                    color: Colors.black45,
+                  ),
+                  SizedBox(height: 1.25.h),
+                  Text(
+                    "You have no pending todo's\nat this moment.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
             )
           : SingleChildScrollView(
               physics: const ClampingScrollPhysics(),

@@ -18,6 +18,7 @@ class _TodoScreenViewState extends State<TodoScreenView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Flutter Todo Sqflite"),
+          centerTitle: true,
           bottom: TabBar(
             indicatorColor: Colors.white,
             labelStyle: TextStyle(fontSize: 16.sp),
