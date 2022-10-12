@@ -21,8 +21,8 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
     super.initState();
   }
 
+  // Get all todo with status of completed
   getTodoCompleted() async {
-    // Get all todo with status of completed
     List result =
         await SqfliteDatabaseService().selectTodo(status: "Completed");
 
@@ -48,8 +48,27 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: listTodoCompleted.isEmpty
-          ? const Center(
-              child: Text("TODO(COMPLETED) IS EMPTY"),
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.report,
+                    size: 26.sp,
+                    color: Colors.black45,
+                  ),
+                  SizedBox(height: 1.25.h),
+                  Text(
+                    "You have no completed todo's yet.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
             )
           : SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
