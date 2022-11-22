@@ -33,7 +33,7 @@ class SqfliteDatabaseService {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  // Select all todo based with the status
+  // Select all todo records based on the status
   Future<List> selectTodo({required String status}) async {
     try {
       List result = await db!.rawQuery('''
@@ -50,7 +50,7 @@ class SqfliteDatabaseService {
     }
   }
 
-  // Insert new record on todo table
+  // Insert new todo record on the todo table
   Future insertTodo({
     required String title,
     required String content,
@@ -73,7 +73,7 @@ class SqfliteDatabaseService {
     }
   }
 
-  // Update record on todo table based with the id
+  // Update todo record on the todo table based on the id
   Future updateTodo({
     required int id,
     required String title,
@@ -97,7 +97,7 @@ class SqfliteDatabaseService {
     }
   }
 
-  // Delete record on todo table based with the id
+  // Delete todo record on the todo table based on the id
   Future deleteTodo({required int id}) async {
     try {
       db!.transaction(

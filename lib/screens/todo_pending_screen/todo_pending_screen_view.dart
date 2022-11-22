@@ -21,29 +21,22 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
     super.initState();
   }
 
-  // Get all todo with status of pending
-  getTodoPending() async {
+  // Get all todo's with status of pending
+  void getTodoPending() async {
     List result = await SqfliteDatabaseService().selectTodo(status: "Pending");
-
-    listTodoPending.clear();
 
     setState(
       () {
+        listTodoPending.clear();
+
         for (var value in result) {
-          listTodoPending.add(
-            Todo(
-              id: value["id"],
-              title: value["title"],
-              content: value["content"],
-              status: value["status"],
-            ),
-          );
+          listTodoPending.add(Todo.fromMap(value));
         }
       },
     );
   }
 
-  showSharedDialogInsert() {
+  void showSharedDialogTodoInsert() {
     ScrollController scrollController = ScrollController();
     TextEditingController titleController = TextEditingController();
     TextEditingController contentController = TextEditingController();
@@ -142,8 +135,8 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.report,
-                    size: 26.sp,
+                    Icons.assignment_outlined,
+                    size: 27.sp,
                     color: Colors.black45,
                   ),
                   SizedBox(height: 1.25.h),
@@ -159,26 +152,23 @@ class _TodoPendingScreenViewState extends State<TodoPendingScreenView> {
                 ],
               ),
             )
-          : SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: listTodoPending.length,
-                  itemBuilder: (context, index) {
-                    return TodoPendingCard(
-                      todo: listTodoPending[index],
-                      getTodoPending: () => getTodoPending(),
-                    );
-                  },
-                ),
+          : Padding(
+              padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
+              child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listTodoPending.length,
+                itemBuilder: (context, index) {
+                  return TodoPendingCard(
+                    todo: listTodoPending[index],
+                    getTodoPending: () => getTodoPending(),
+                  );
+                },
               ),
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          showSharedDialogInsert();
+        onPressed: () {
+          showSharedDialogTodoInsert();
         },
         child: const Icon(Icons.add),
       ),

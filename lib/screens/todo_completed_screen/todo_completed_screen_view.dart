@@ -21,24 +21,17 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
     super.initState();
   }
 
-  // Get all todo with status of completed
-  getTodoCompleted() async {
+  // Get all todo's with status of completed
+  void getTodoCompleted() async {
     List result =
         await SqfliteDatabaseService().selectTodo(status: "Completed");
 
-    listTodoCompleted.clear();
-
     setState(
       () {
+        listTodoCompleted.clear();
+
         for (var value in result) {
-          listTodoCompleted.add(
-            Todo(
-              id: value["id"],
-              title: value["title"],
-              content: value["content"],
-              status: value["status"],
-            ),
-          );
+          listTodoCompleted.add(Todo.fromMap(value));
         }
       },
     );
@@ -53,8 +46,8 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.report,
-                    size: 26.sp,
+                    Icons.assignment_outlined,
+                    size: 27.sp,
                     color: Colors.black45,
                   ),
                   SizedBox(height: 1.25.h),
@@ -70,21 +63,18 @@ class _TodoCompletedScreenViewState extends State<TodoCompletedScreenView> {
                 ],
               ),
             )
-          : SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: listTodoCompleted.length,
-                  itemBuilder: (context, index) {
-                    return TodoCompletedCard(
-                      todo: listTodoCompleted[index],
-                      getTodoCompleted: () => getTodoCompleted(),
-                    );
-                  },
-                ),
+          : Padding(
+              padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 2.w),
+              child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listTodoCompleted.length,
+                itemBuilder: (context, index) {
+                  return TodoCompletedCard(
+                    todo: listTodoCompleted[index],
+                    getTodoCompleted: () => getTodoCompleted(),
+                  );
+                },
               ),
             ),
     );
