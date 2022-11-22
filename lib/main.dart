@@ -16,9 +16,17 @@ class MyApp extends StatelessWidget {
 
     return ResponsiveSizer(
       builder: (context, orientation, screenType) {
-        return const MaterialApp(
+        return MaterialApp(
           title: "Flutter Todo Sqflite",
-          home: SplashScreenView(),
+          home: const SplashScreenView(),
+          theme: Theme.of(context).copyWith(
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
+          ),
         );
       },
     );

@@ -29,19 +29,19 @@ showSharedDialog({
                 title: title,
                 content: content,
                 actions: [
-                  if (actionLabel1 != null && actionFunction1 != null) ...[
+                  if (actionFunction1 != null && actionLabel1 != null) ...[
                     TextButton(
                       onPressed: actionFunction1,
                       child: actionLabel1,
                     ),
                   ],
-                  if (actionLabel2 != null && actionFunction2 != null) ...[
+                  if (actionFunction2 != null && actionLabel2 != null) ...[
                     TextButton(
                       onPressed: actionFunction2,
                       child: actionLabel2,
                     ),
                   ],
-                  if (actionLabel3 != null && actionFunction3 != null) ...[
+                  if (actionFunction3 != null && actionLabel3 != null) ...[
                     TextButton(
                       onPressed: actionFunction3,
                       child: actionLabel3,
@@ -55,19 +55,19 @@ showSharedDialog({
                 title: title,
                 content: content,
                 actions: [
-                  if (actionLabel1 != null && actionFunction1 != null) ...[
+                  if (actionFunction1 != null && actionLabel1 != null) ...[
                     CupertinoDialogAction(
                       onPressed: actionFunction1,
                       child: actionLabel1,
                     ),
                   ],
-                  if (actionLabel2 != null && actionFunction2 != null) ...[
+                  if (actionFunction2 != null && actionLabel2 != null) ...[
                     CupertinoDialogAction(
                       onPressed: actionFunction2,
                       child: actionLabel2,
                     ),
                   ],
-                  if (actionLabel3 != null && actionFunction3 != null) ...[
+                  if (actionFunction3 != null && actionLabel3 != null) ...[
                     CupertinoDialogAction(
                       onPressed: actionFunction3,
                       child: actionLabel3,

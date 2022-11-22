@@ -24,13 +24,13 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
   bool isExpanded = false;
   ScrollController scrollController = ScrollController();
 
-  changeIsExpanded() {
+  void changeIsExpanded() {
     setState(() {
       isExpanded = !isExpanded;
     });
   }
 
-  showSharedDialogUpdate() {
+  void showSharedDialogTodoUpdate() {
     ScrollController scrollController = ScrollController();
     TextEditingController titleController = TextEditingController()
       ..text = widget.todo.title;
@@ -156,7 +156,7 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
             children: [
               ListTile(
                 leading: Icon(
-                  Icons.assignment,
+                  Icons.assignment_outlined,
                   size: 21.sp,
                 ),
                 title: Text(widget.todo.title),
@@ -199,7 +199,7 @@ class _TodoPendingCardState extends State<TodoPendingCard> {
           children: [
             SlidableAction(
               onPressed: (context) {
-                showSharedDialogUpdate();
+                showSharedDialogTodoUpdate();
               },
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
@@ -245,7 +245,7 @@ class _TodoCompletedCardState extends State<TodoCompletedCard> {
   bool isExpanded = false;
   ScrollController scrollController = ScrollController();
 
-  changeIsExpanded() {
+  void changeIsExpanded() {
     setState(() {
       isExpanded = !isExpanded;
     });
@@ -284,7 +284,7 @@ class _TodoCompletedCardState extends State<TodoCompletedCard> {
             children: [
               ListTile(
                 leading: Icon(
-                  Icons.assignment_turned_in,
+                  Icons.assignment_outlined,
                   size: 21.sp,
                 ),
                 title: Text(widget.todo.title),
